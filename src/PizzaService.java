@@ -10,7 +10,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * Created by Cedric on 30.12.2015.
@@ -77,6 +81,53 @@ public class PizzaService extends Application {
                 einkaufsWag.clear();
             }
         });
+
+        sendOrdBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) { //TODO: den ganzen Layout Müll durch Monospace & Programmieren ersetzten
+                // Quittungs Fenster erstellen
+                Stage quittung = new Stage();
+                quittung.setTitle("Quittung");
+                quittung.setWidth(250);
+                quittung.setHeight(700);
+                quittung.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                    @Override
+                    public void handle(WindowEvent event) {
+                        einkaufsWag.clear();
+                    }
+                });
+
+                // Überschrift erstellen
+                Text heading = new Text("Ihre Quittung:");
+                heading.setFont(new Font(18));
+                heading.setWrappingWidth(230);
+
+                // Komponenten hinzufügen und anordnen
+                VBox mainBox = new VBox();
+                VBox pizzaBox = new VBox();
+
+                mainBox.getChildren().addAll(heading, pizzaBox);
+
+                // Mit Daten befüllen
+                for (String pizza : einkaufsWag) {
+                    HBox temp = new HBox();
+                    //temp.setPrefWidth(230);
+
+                    Text nameText = new Text(pizza);
+                    Text priceText = new Text((data.getPrice(pizza)) + "$");
+                    priceText.setTextAlignment(TextAlignment.RIGHT);
+
+                    temp.getChildren().addAll(nameText, priceText);
+                    pizzaBox.getChildren().add(temp);
+                }
+
+
+
+                // Fenster Zeigen
+                quittung.setScene(new Scene(mainBox));
+                quittung.show();
+            }
+        });
     }
 
     public static void main(String args[])  {
@@ -93,7 +144,7 @@ public class PizzaService extends Application {
 
         // Beispiel
         HBox box = new HBox();
-        box.getChildren().addAll(addBtn, removeBtn, cancelBtn, Pizzen, einkaufsWagView);
+        box.getChildren().addAll(addBtn, removeBtn, cancelBtn, sendOrdBtn, Pizzen, einkaufsWagView);
         root.getChildren().addAll(box);
     }
 }
