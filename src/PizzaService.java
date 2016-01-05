@@ -29,7 +29,7 @@ public class PizzaService extends Application {
     // Compose Order
     Button addBtn = new Button("Hinzufuegen");
     Button removeBtn = new Button("Entfernen");
-    Button cancelBtn = new Button("Abbrechen");
+    Button cancelBtn = new Button("Leeren");
     // Send Order
     Button sendOrdBtn = new Button("Bestellung Senden");
     // Store Order
@@ -84,44 +84,79 @@ public class PizzaService extends Application {
 
         sendOrdBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent event) { //TODO: den ganzen Layout Müll durch Monospace & Programmieren ersetzten
+            public void handle(ActionEvent event) {
                 // Quittungs Fenster erstellen
                 Stage quittung = new Stage();
                 quittung.setTitle("Quittung");
                 quittung.setWidth(250);
                 quittung.setHeight(700);
+                quittung.setResizable(false);
                 quittung.setOnCloseRequest(new EventHandler<WindowEvent>() {
                     @Override
                     public void handle(WindowEvent event) {
                         einkaufsWag.clear();
                     }
                 });
+                VBox mainBox = new VBox(); //TODO: Scrollbarkeit einführen
 
-                // Überschrift erstellen
-                Text heading = new Text("Ihre Quittung:");
-                heading.setFont(new Font(18));
-                heading.setWrappingWidth(230);
+                // Schrift erstellen
+                Text textComponent = new Text();
+                textComponent.setFont(Font.font(java.awt.Font.MONOSPACED));
+                textComponent.setWrappingWidth(240);
 
-                // Komponenten hinzufügen und anordnen
-                VBox mainBox = new VBox();
-                VBox pizzaBox = new VBox();
+                // Überschrift schreiben
+                String text = "";
+                text += "\n" +
+                        "================================\n" +
+                        " Ihre Quittung:\n" +
+                        "================================\n\n\n";
 
-                mainBox.getChildren().addAll(heading, pizzaBox);
-
-                // Mit Daten befüllen
+                // Pizzen schreiben
                 for (String pizza : einkaufsWag) {
-                    HBox temp = new HBox();
-                    //temp.setPrefWidth(230);
+                    // Schreibe eine Reihe für jede Pizza
 
-                    Text nameText = new Text(pizza);
-                    Text priceText = new Text((data.getPrice(pizza)) + "$");
-                    priceText.setTextAlignment(TextAlignment.RIGHT);
+                    // Variablen initiern
+                    String row = "";
+                    String price = String.format("%.2f", data.getPrice(pizza));
 
-                    temp.getChildren().addAll(nameText, priceText);
-                    pizzaBox.getChildren().add(temp);
+                    // Reihe schreiben
+                    row += " " + pizza;
+                    for (int i = 0, n = 31-pizza.length()-price.length(); i < n; i++)
+                        row += " ";
+                    row += price;
+
+                    text += row + "\n\n";
                 }
 
+                // Gesamtpreis berechnen
+                double totalPrice = 0.0;
+                for (String pizza : einkaufsWag) {
+                    totalPrice += data.getPrice(pizza);
+                }
 
+                // Zusammenfassung schreiben
+                String summary= "";
+                String totalDiscript = "TOTAL:";
+                String totalPriceStr = String.format("%.2f", totalPrice);
+
+                summary += "\n--------------------------------\n\n";
+                summary += " " + totalDiscript;
+                for (int i = 0, n = 31-totalDiscript.length()-totalPriceStr.length(); i < n; i++)
+                    summary += " ";
+                summary += totalPriceStr;
+
+                summary += "\n\n\n" +
+                        " Milan, Moritz und Cedric danken\n" +
+                        " ihnen vielmals fuer ihren Ein-\n" +
+                        " kauf bei IngoPizza.\n\n" +
+                        " Auf Wiedersehen! ^^";
+
+                text += summary;
+
+
+                // Componenten zu mainBox hinzufügen
+                textComponent.setText(text);
+                mainBox.getChildren().add(textComponent);
 
                 // Fenster Zeigen
                 quittung.setScene(new Scene(mainBox));
