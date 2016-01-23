@@ -170,13 +170,6 @@ public class PizzaService extends Application {
     }
 
     public void setUpUI(StackPane root) {
-        // Milan, hier kannst du dann die Ganzen Components aus Controls
-        // in root zu ner schönen UI anordnen, müsste dann im Fenster
-        // auftauchen ^^
-        // Um den ganzen Back End Code kann ich mich kümmern, sorg du
-        // dann einfach dafür das des ganze Zeug mit Layouts und so
-        // gescheid aussieht.
-
         // Beispiel
         HBox box = new HBox();
         box.getChildren().addAll(addBtn, removeBtn, cancelBtn, sendOrdBtn, Pizzen, einkaufsWagView);
