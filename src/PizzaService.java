@@ -3,9 +3,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -170,9 +172,35 @@ public class PizzaService extends Application {
     }
 
     public void setUpUI(StackPane root) {
-        // Beispiel
-        HBox box = new HBox();
-        box.getChildren().addAll(addBtn, removeBtn, cancelBtn, sendOrdBtn, Pizzen, einkaufsWagView);
-        root.getChildren().addAll(box);
+        Label label = new Label("Hier findest du Unsere Pizzen");
+        Label orderText = new Label ("Dein Einkaufswagen");
+
+        VBox ourPizzas = new VBox(10);
+        ourPizzas.getChildren().addAll (label, Pizzen);
+
+        VBox yourOrder = new VBox(10);
+        yourOrder.getChildren().addAll(orderText, einkaufsWagView);
+
+        VBox order = new VBox(20);
+        order.getChildren().addAll(ourPizzas, yourOrder);
+
+        VBox buttons = new VBox(10);
+        buttons.setPadding(new Insets (100, 0, 0, 0));
+        buttons.getChildren().addAll(addBtn, removeBtn);
+
+        HBox first = new HBox(10);
+        first.getChildren().addAll(order, buttons);
+
+        HBox second = new HBox(20);
+        second.getChildren().addAll(sendOrdBtn, cancelBtn);
+
+        VBox background = new VBox(10);
+        background.getChildren().addAll(first, second);
+
+
+
+
+        root.getChildren().addAll(background);
+        root.setPadding(new Insets(10, 20, 20,20));
     }
 }
