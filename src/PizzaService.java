@@ -32,12 +32,16 @@ public class PizzaService extends Application {
     Button addBtn = new Button("Hinzufuegen");
     Button removeBtn = new Button("Entfernen");
     Button cancelBtn = new Button("Leeren");
+    //Setup Pizza
+    Button sizeBtn = new Button("Finish");
+    ComboBox<String> pizzaSize = new ComboBox<String>();
     // Send Order
     Button sendOrdBtn = new Button("Bestellung Senden");
     // Store Order
     ComboBox<String> Pizzen = new ComboBox<String>();
     ListView<String> einkaufsWagView = new ListView<String>(einkaufsWag);
-
+    //Label
+    Label sizes = new Label("WÃ¤hle deine gewuenschte Pizza-GrÃ¶ÃŸe");  
 
 
     @Override
@@ -50,12 +54,18 @@ public class PizzaService extends Application {
         // Elemente ordnen
         setUpUI(root);
 
-        // Combo Box befüllen
+        // Combo Box befÃ¼llen
         ObservableList<String> pizzaVals = FXCollections.observableArrayList();
         pizzaVals.addAll(data.getPizzas());
         Pizzen.setItems(pizzaVals);
         Pizzen.setValue(pizzaVals.get(0));
-
+        
+        //Combo Box Size befuellen
+        ObservableList<String> pizzaSizes = FXCollections.observableArrayList();
+        pizzaSizes.addAll("Small", "Medium", "Family", "Party");
+        pizzaSize.setItems(pizzaSizes);
+        pizzaSize.setValue(pizzaSizes.get(0));
+    
         // Eventmanagement einrichten
         setUpEvents();
 
@@ -64,11 +74,39 @@ public class PizzaService extends Application {
 
     private void setUpEvents() {
         addBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                einkaufsWag.add(Pizzen.getValue());
-            }
+      @Override
+        public void handle(ActionEvent event) { 
+        Stage pizzasetup = new Stage();
+        pizzasetup.setTitle("Deine Pizza");
+        pizzasetup.setWidth(250);
+        pizzasetup.setHeight(400);
+        pizzasetup.setResizable(false);
+        pizzasetup.setOnCloseRequest(new EventHandler<WindowEvent>() {
+          @Override
+            public void handle (WindowEvent event) {
+            einkaufsWag.add(Pizzen.getValue());  
+          }
+          
+          
+          
+          
         });
+        
+        VBox comboLabel = new VBox(20);
+        comboLabel.getChildren().addAll(sizes, pizzaSize);
+        
+        VBox finishbtn = new VBox(20);
+        finishbtn.setAlignment(Pos.BOTTOM_CENTER);
+        finishbtn.getChildren().addAll(sizeBtn);
+        
+        VBox settings = new VBox(200);
+        settings.setPadding(new Insets(10,10,10,10));
+        settings.getChildren().addAll(comboLabel, finishbtn);
+        
+        pizzasetup.setScene(new Scene(settings));
+        pizzasetup.show();
+    }
+    });
 
         removeBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -99,14 +137,14 @@ public class PizzaService extends Application {
                         einkaufsWag.clear();
                     }
                 });
-                VBox mainBox = new VBox(); //TODO: Scrollbarkeit einführen
+                VBox mainBox = new VBox(); //TODO: Scrollbarkeit einfÃ¼hren
 
                 // Schrift erstellen
                 Text textComponent = new Text();
                 textComponent.setFont(Font.font(java.awt.Font.MONOSPACED));
                 textComponent.setWrappingWidth(240);
 
-                // Überschrift schreiben
+                // Ãœberschrift schreiben
                 String text = "";
                 text += "\n" +
                         "================================\n" +
@@ -115,7 +153,7 @@ public class PizzaService extends Application {
 
                 // Pizzen schreiben
                 for (String pizza : einkaufsWag) {
-                    // Schreibe eine Reihe für jede Pizza
+                    // Schreibe eine Reihe fÃ¼r jede Pizza
 
                     // Variablen initiern
                     String row = "";
@@ -156,7 +194,7 @@ public class PizzaService extends Application {
                 text += summary;
 
 
-                // Componenten zu mainBox hinzufügen
+                // Componenten zu mainBox hinzufÃ¼gen
                 textComponent.setText(text);
                 mainBox.getChildren().add(textComponent);
 
